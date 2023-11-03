@@ -1,4 +1,9 @@
-let btnToggleDarkMode = document.querySelector("#btn-toggle-dark-mode");
+const url = "https://restcountries.com/v3.1/all";
+
+let countries;
+
+const countriesContainer = document.querySelector("#countries-selection-box");
+const btnToggleDarkMode = document.querySelector("#btn-toggle-dark-mode");
 
 function toggleDarkMode() {
   document.querySelector("html").classList.toggle("dark-mode");
@@ -6,9 +11,76 @@ function toggleDarkMode() {
   btnToggleDarkMode.children[0].classList.toggle("bi-moon-fill");
 }
 
-function init() {
-  btnToggleDarkMode.addEventListener("click", toggleDarkMode);
+async function getAllCountries(url) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("Error fetching countries");
+  }
+  countries = await response.json();
+}
 
+function createCountriesBox(countries) {
+  countries.forEach((country) => {
+    const img = country.flags.png;
+    const officialName = country.name.official;
+    const population = country.population;
+    const region = country.region;
+    // const subRegion = country.subregion;
+    let capital;
+    if (!country.capital) {
+      capital = "none";
+    } else {
+      capital = country.capital.join(", ");
+    }
+    let topLevelDomain;
+    if (!country.tld) {
+      topLevelDomain = "";
+    } else {
+      topLevelDomain = country.tld.join(", ");
+    }
+    // const currencies = country.currencies; // obj
+    // const languages = country.languages; // obj
+
+    const countryDiv = document.createElement("div");
+    countryDiv.classList.add("country-info-box");
+    countryDiv.innerHTML = `
+    <img src=${img}>
+    <h3>${officialName}</h3>
+    <p>Population: ${population}</p>
+    <p>Region: ${region}</p>
+    <p>Capital:  ${capital}</p>
+    `;
+
+    countriesContainer.appendChild(countryDiv);
+  });
+}
+
+function searchCountries(countries) {
+  const inputSearch = document.querySelector("#input-field-country");
+  inputSearch.addEventListener("input", () => {
+    countriesContainer.innerHTML = "";
+
+    if (inputSearch.value === "") {
+      createCountriesBox(countries);
+    }
+
+    const filteredCountries = countries.filter((country) => {
+      return country.name.official
+        .toLowerCase()
+        .includes(inputSearch.value.toLowerCase());
+    });
+    filteredCountries;
+    createCountriesBox(filteredCountries);
+  });
+}
+
+// document.querySelector("#country-details").classList.remove("display-none");
+
+async function init() {
+  btnToggleDarkMode.addEventListener("click", toggleDarkMode);
+  await getAllCountries(url);
+  createCountriesBox(countries);
+  searchCountries(countries);
 }
 
 window.onload = init();
