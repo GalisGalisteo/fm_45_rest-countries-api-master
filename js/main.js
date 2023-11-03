@@ -23,21 +23,21 @@ function createCountriesBox(countries) {
   countries.forEach((country) => {
     const img = country.flags.png;
     const officialName = country.name.official;
-    const population = country.population;
+    const population = parseInt(country.population).toLocaleString("es");
     const region = country.region;
     // const subRegion = country.subregion;
     let capital;
     if (!country.capital) {
-      capital = "none";
+      capital = "None";
     } else {
       capital = country.capital.join(", ");
     }
-    let topLevelDomain;
-    if (!country.tld) {
-      topLevelDomain = "";
-    } else {
-      topLevelDomain = country.tld.join(", ");
-    }
+    // let topLevelDomain;
+    // if (!country.tld) {
+    //   topLevelDomain = "";
+    // } else {
+    //   topLevelDomain = country.tld.join(", ");
+    // }
     // const currencies = country.currencies; // obj
     // const languages = country.languages; // obj
 
@@ -74,6 +74,37 @@ function searchCountries(countries) {
   });
 }
 
+function filtreRegion(countries) {
+  const regionsMap = countries.map((country) => {
+    return country.region;
+  });
+  const regions = [...new Set(regionsMap)];
+  const countrySelect = document.querySelector("#countrySelect");
+  countrySelect.innerHTML = `<option value="-1">Filter by region</option>`;
+  regions.forEach((region) => {
+    const regionOption = document.createElement("option");
+    regionOption.value = region;
+    regionOption.textContent = region;
+    countrySelect.appendChild(regionOption);
+  });
+
+  countrySelect.addEventListener("change", (event) => {
+    countriesContainer.innerHTML = "";
+
+    if (event.target.value === -1) {
+      createCountriesBox(countries);
+    }
+
+    const filteredRegion = countries.filter((country) => {
+      return country.region
+        .toLowerCase()
+        .includes(event.target.value.toLowerCase());
+    });
+    filteredRegion;
+    createCountriesBox(filteredRegion);
+  });
+}
+
 // document.querySelector("#country-details").classList.remove("display-none");
 
 async function init() {
@@ -81,6 +112,7 @@ async function init() {
   await getAllCountries(url);
   createCountriesBox(countries);
   searchCountries(countries);
+  filtreRegion(countries);
 }
 
 window.onload = init();
