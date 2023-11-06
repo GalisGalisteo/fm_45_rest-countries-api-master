@@ -574,7 +574,7 @@ header {
 }
 
 #country-details.display-none {
-  display: block;
+  display: none;
 }
 
 #country-details button {

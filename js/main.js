@@ -22,30 +22,21 @@ async function getAllCountries(url) {
 function createCountriesBox(countries) {
   countries.forEach((country) => {
     const img = country.flags.png;
-    const officialName = country.name.official;
+    const commonName = country.name.common;
     const population = parseInt(country.population).toLocaleString("es");
     const region = country.region;
-    // const subRegion = country.subregion;
     let capital;
     if (!country.capital) {
       capital = "None";
     } else {
       capital = country.capital.join(", ");
     }
-    // let topLevelDomain;
-    // if (!country.tld) {
-    //   topLevelDomain = "";
-    // } else {
-    //   topLevelDomain = country.tld.join(", ");
-    // }
-    // const currencies = country.currencies; // obj
-    // const languages = country.languages; // obj
 
     const countryDiv = document.createElement("div");
     countryDiv.classList.add("country-info-box");
     countryDiv.innerHTML = `
     <img src=${img}>
-    <h3>${officialName}</h3>
+    <h3>${commonName}</h3>
     <p>Population: ${population}</p>
     <p>Region: ${region}</p>
     <p>Capital:  ${capital}</p>
@@ -57,7 +48,7 @@ function createCountriesBox(countries) {
 
 function searchCountries(countries) {
   const inputSearch = document.querySelector("#input-field-country");
-  inputSearch.addEventListener("input", () => {
+  inputSearch.addEventListener("input", (event) => {
     countriesContainer.innerHTML = "";
 
     if (inputSearch.value === "") {
@@ -105,7 +96,60 @@ function filtreRegion(countries) {
   });
 }
 
-// document.querySelector("#country-details").classList.remove("display-none");
+function countryDetails() {
+  countriesContainer.addEventListener("click", (event) => {
+    if (event.target.tagName === "IMG") {
+      countriesContainer.classList.add("display-none");
+      document
+        .querySelector("#country-details")
+        .classList.remove("display-none");
+      const countryFinded = countries.find(
+        (c) => c.flags.png === event.target.src
+      );
+      console.log(
+        "🚀 ~ file: main.js:107 ~ countriesContainer.addEventListener ~ countryFinded:",
+        countryFinded
+      );
+      const commonName = countryFinded.name.common;
+      const population = parseInt(countryFinded.population).toLocaleString(
+        "es"
+      );
+      const region = countryFinded.region;
+      const subRegion = countryFinded.subregion;
+      let capital;
+      if (!countryFinded.capital) {
+        capital = "None";
+      } else {
+        capital = countryFinded.capital.join(", ");
+      }
+      let topLevelDomain;
+      if (!countryFinded.tld) {
+        topLevelDomain = "";
+      } else {
+        topLevelDomain = countryFinded.tld.join(", ");
+      }
+      const currencies = countryFinded.currencies; // obj
+      const languages = countryFinded.languages; // obj
+      const allLanguagesString = Object.entries(countryFinded.languages)
+        .map(
+          ([languageCode, languageName]) => `${languageName} (${languageCode})`
+        )
+        .join(", ");
+
+      console.log(allLanguagesString);
+
+      document.querySelector("#detail-native-name").textContent = commonName;
+      document.querySelector("#detail-population").textContent = population;
+      document.querySelector("#detail-region").textContent = region;
+      document.querySelector("#detail-sub-region").textContent = subRegion;
+      document.querySelector("#detail-capital").textContent = capital;
+      document.querySelector("#detail-tld").textContent = topLevelDomain;
+      document.querySelector("#detail-currency").textContent = currencies;
+      document.querySelector("#detail-languages").textContent =
+        allLanguagesString;
+    }
+  });
+}
 
 async function init() {
   btnToggleDarkMode.addEventListener("click", toggleDarkMode);
@@ -113,6 +157,7 @@ async function init() {
   createCountriesBox(countries);
   searchCountries(countries);
   filtreRegion(countries);
+  countryDetails();
 }
 
 window.onload = init();
