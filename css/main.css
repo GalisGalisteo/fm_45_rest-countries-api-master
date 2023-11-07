@@ -73,7 +73,7 @@ header {
   transition: all 0.2s ease-in-out;
 }
 
-#countrySelect {
+#region-select {
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
@@ -85,7 +85,7 @@ header {
   /* Elimina las flechas predeterminadas en algunos navegadores */
 }
 
-#countrySelect:focus {
+#region-select:focus {
   outline: none;
   border-color: #007BFF;
   /* Cambia el color del borde al enfocar el elemento */
@@ -94,14 +94,14 @@ header {
 }
 
 /* Personaliza las opciones */
-#countrySelect option {
+#region-select option {
   background-color: #fff;
   color: #333;
   padding: 10px;
 }
 
 /* Estilo al hover de las opciones */
-#countrySelect option:hover {
+#region-select option:hover {
   background-color: #007BFF;
   color: #fff;
 }
