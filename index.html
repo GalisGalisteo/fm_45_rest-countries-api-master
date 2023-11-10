@@ -27,23 +27,21 @@
       <section id="input-options-container">
         <div class="input-container">
           <i class="bi bi-search"></i>
-          <input id="input-field-country" type="text" placeholder="Search for a country..." />
+          <input v-model="inputCountry" id="input-field-country" type="text" placeholder="Search for a country..." />
         </div>
         <div id="region-selector-container">
-          <select id="region-select">
+          <select v-model="selectedRegion" id="region-select">
             <option value="-1">Filter by region</option>
-            <option value="Europe">Europe</option>
-            <option value="Americas">Americas</option>
-            <!-- Agrega más opciones según tus necesidades -->
+            <option v-for="region in regions" :value="region">{{region}}</option>
           </select>
       </section>
       <section id="countries-selection-box">
-        <div class="country-info-box">
-          <img src="https://flagcdn.com/w320/tc.png">
-          <h3>Turks and Caicos Islands</h3>
-          <p>Population: 38.718</p>
-          <p>Region: Americas</p>
-          <p>Capital:  Cockburn Town</p>
+        <div v-for="country in filteredCountries" class="country-info-box">
+          <img :src="country.flags.png">
+          <h3>{{country.name.common}}</h3>
+          <p><strong>Population:</strong> {{parseInt(country.population).toLocaleString("es")}}</p>
+          <p><strong>Region:</strong> {{country.region}}</p>
+          <p><strong>Capital:</strong> {{country.capital ? country.capital.join(", ") : "None" }}</p>
         </div>
       </section>
       <section id="country-details" class="display-none">

@@ -18,13 +18,41 @@ async function getAllCountries(url) {
 createApp({
   setup() {
     const countries = ref([]);
-    
+    const selectedRegion = ref("-1");
+    const inputCountry = ref("");
+
+    const regions = computed(() => {
+      const regionsMap = countries.value.map((country) => country.region);
+      const regionSet = new Set(regionsMap);
+      return Array.from(regionSet);
+    });
+
+    const filteredCountries = computed(() => {
+      return countries.value.filter(
+        (country) =>
+          (country.name.common
+            .toLowerCase()
+            .includes(inputCountry.value.toLowerCase()) &&
+            country.region
+              .toLowerCase()
+              .includes(selectedRegion.value.toLowerCase())) ||
+          (country.name.common
+            .toLowerCase()
+            .includes(inputCountry.value.toLowerCase()) &&
+            selectedRegion.value == "-1")
+      );
+    });
+
     onMounted(async () => {
       countries.value = await getAllCountries(url);
     });
 
     return {
       countries,
+      selectedRegion,
+      inputCountry,
+      regions,
+      filteredCountries,
     };
   },
 }).mount("#app");
