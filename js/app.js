@@ -20,6 +20,8 @@ createApp({
     const countries = ref([]);
     const selectedRegion = ref("-1");
     const inputCountry = ref("");
+    const showDetails = ref(false);
+    const selectedCountry = ref("");
 
     const regions = computed(() => {
       const regionsMap = countries.value.map((country) => country.region);
@@ -43,6 +45,27 @@ createApp({
       );
     });
 
+    const handleCountryClick = (country) => {
+      selectedCountry.value = country;
+      showDetails.value = true;
+    };
+
+    const currencies = (selectedCountry) => {
+      return Object.entries(selectedCountry.currencies)
+        .map(
+          ([currencyCode, currencyObject]) =>
+            `${currencyObject.name} (${currencyObject.symbol})`
+        )
+        .join(", ");
+    };
+    const languages = (selectedCountry) => {
+      return Object.entries(selectedCountry.languages)
+        .map(
+          ([languageCode, languageName]) => `${languageName} (${languageCode})`
+        )
+        .join(", ");
+    };
+
     onMounted(async () => {
       countries.value = await getAllCountries(url);
     });
@@ -53,6 +76,11 @@ createApp({
       inputCountry,
       regions,
       filteredCountries,
+      showDetails,
+      selectedCountry,
+      handleCountryClick,
+      currencies,
+      languages,
     };
   },
 }).mount("#app");

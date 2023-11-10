@@ -35,25 +35,25 @@
             <option v-for="region in regions" :value="region">{{region}}</option>
           </select>
       </section>
-      <section id="countries-selection-box">
+      <section v-show="!showDetails" id="countries-selection-box">
         <div v-for="country in filteredCountries" class="country-info-box">
-          <img :src="country.flags.png">
+          <img @click="handleCountryClick(country)" :src="country.flags.png">
           <h3>{{country.name.common}}</h3>
           <p><strong>Population:</strong> {{parseInt(country.population).toLocaleString("es")}}</p>
           <p><strong>Region:</strong> {{country.region}}</p>
           <p><strong>Capital:</strong> {{country.capital ? country.capital.join(", ") : "None" }}</p>
         </div>
       </section>
-      <section id="country-details" class="display-none">
-        <button id="btn-leave-details" aria-label="back to main page">
+      <section v-show="showDetails" id="country-details">
+        <button @click="showDetails = false" id="btn-leave-details" aria-label="back to main page">
           <i class="bi bi-arrow-left"></i> Back
         </button>
-        <div id="country-details-container">
+        <div v-if="showDetails" id="country-details-container">
           <div>
-            <img id="country-detail-flag" src="#" alt="flag not loaded" />
+            <img id="country-detail-flag" :src="selectedCountry.flags.png" alt="flag not loaded" />
           </div>
           <div class="country-detail-text">
-            <h2 id="country-detail-name"></h2>
+            <h2 id="country-detail-name">{{ selectedCountry.name.common }}</h2>
             <div class="country-detail-text-container">
               <div class="text-container1">
                 <p>
@@ -61,33 +61,35 @@
                   <span id="detail-native-name"></span>
                 </p>
                 <p>
-                  <span>Population: </span>
-                  <span id="detail-population"></span>
+                  <span>Population:</span>
+                  <span id="detail-population">{{parseInt(selectedCountry.population).toLocaleString("es")}}</span>
                 </p>
-                <p><span>Region: </span><span id="detail-region"></span></p>
+                <p><span>Region: </span><span id="detail-region">{{selectedCountry.region}}</span></p>
                 <p>
                   <span>Sub Region: </span>
-                  <span id="detail-sub-region"></span>
+                  <span id="detail-sub-region">{{selectedCountry.subregion}}</span>
                 </p>
-                <p><span>Capital: </span><span id="detail-capital"></span></p>
+                <p><span>Capital: </span><span id="detail-capital">{{selectedCountry.capital ? selectedCountry.capital.join(", ") : "None" }}</span></p>
               </div>
               <div class="text-container2">
                 <p>
                   <span>Top Level Domain: </span>
-                  <span id="detail-tld"></span>
+                  <span id="detail-tld">{{selectedCountry.tld ? selectedCountry.tld.join(", ") : "None" }}</span>
                 </p>
                 <p>
                   <span>Currencies: </span>
-                  <span id="detail-currency"></span>
+                  <span id="detail-currency">{{currencies(selectedCountry)}}</span>
                 </p>
                 <p>
                   <span>Languages: </span>
-                  <span id="detail-languages"></span>
+                  <span id="detail-languages">{{languages(selectedCountry)}}</span>
                 </p>
               </div>
             </div>
             <h3>Border Countries:</h3>
-            <div id="border-countries-container"></div>
+            <div id="border-countries-container">
+              <button v-for="bc in selectedCountry.borders" class="border-country">{{bc}}</button>
+            </div>
           </div>
         </div>
       </section>
