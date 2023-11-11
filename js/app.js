@@ -66,6 +66,11 @@ createApp({
         .join(", ");
     };
 
+    const borderCountry = (event) => {
+      selectedCountry.value = countries.value.find(
+        (country) => country.cca3 === event.target.textContent
+      );
+    };
     onMounted(async () => {
       countries.value = await getAllCountries(url);
     });
@@ -81,6 +86,7 @@ createApp({
       handleCountryClick,
       currencies,
       languages,
+      borderCountry,
     };
   },
 }).mount("#app");

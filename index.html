@@ -88,7 +88,7 @@
             </div>
             <h3>Border Countries:</h3>
             <div id="border-countries-container">
-              <button v-for="bc in selectedCountry.borders" class="border-country">{{bc}}</button>
+              <button @click="borderCountry" v-for="bc in selectedCountry.borders" class="border-country">{{bc}}</button>
             </div>
           </div>
         </div>
