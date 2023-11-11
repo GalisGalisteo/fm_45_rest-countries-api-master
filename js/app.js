@@ -22,6 +22,7 @@ createApp({
     const inputCountry = ref("");
     const showDetails = ref(false);
     const selectedCountry = ref("");
+    const isDarkMode = ref(false);
 
     const regions = computed(() => {
       const regionsMap = countries.value.map((country) => country.region);
@@ -71,6 +72,12 @@ createApp({
         (country) => country.cca3 === event.target.textContent
       );
     };
+
+    const darkMode = () => {
+      document.body.classList.toggle("dark-mode");
+      isDarkMode.value = !isDarkMode.value;
+    };
+
     onMounted(async () => {
       countries.value = await getAllCountries(url);
     });
@@ -87,6 +94,8 @@ createApp({
       currencies,
       languages,
       borderCountry,
+      isDarkMode,
+      darkMode,
     };
   },
 }).mount("#app");

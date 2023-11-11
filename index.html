@@ -12,10 +12,11 @@
 </head>
 
 <body>
+  <div id="app">
   <header>
     <div class="title-container">
       <h1>Where in the world?</h1>
-      <button id="btn-toggle-dark-mode" class="dark-mode-container" aria-label="toggle dark mode">
+      <button @click="darkMode" id="btn-toggle-dark-mode" class="dark-mode-container" aria-label="toggle dark mode">
         <i class="bi bi-moon"></i>
         Dark Mode
       </button>
@@ -23,7 +24,6 @@
   </header>
 
   <main>
-    <div id="app">
       <section id="input-options-container">
         <div class="input-container">
           <i class="bi bi-search"></i>
